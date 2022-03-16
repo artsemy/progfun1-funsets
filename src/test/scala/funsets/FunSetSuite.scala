@@ -97,6 +97,9 @@ class FunSetSuite extends munit.FunSuite:
       val s = union(union(s1, s2), s3)
       assert(forall(s1, s1), "forall 1")
       assert(!forall(s, s1), "forall 2")
+
+      val ts = union(s, singletonSet(4))
+      assert(forall(ts, x => x < 5), "less than 5")
   }
 
   test("exists") {

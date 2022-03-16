@@ -60,7 +60,7 @@ trait FunSets extends FunSetsInterface:
     def iter(a: Int): Boolean =
       if (a > bound) then
         true
-      else if (s(a) != p(a)) then
+      else if (s(a) && s(a) != p(a)) then
         false
       else
         iter(a + 1)
@@ -93,7 +93,9 @@ trait FunSets extends FunSetsInterface:
         iter(a + 1, union(resSet, singletonSet(f(a))))
       else
         iter(a + 1, resSet)
-    iter(-bound, singletonSet(f(-bound-1)))
+    val empty = singletonSet(f(-bound-1))
+    val r1 = iter(-bound, empty)
+    diff(r1, empty)
 
   /**
    * Displays the contents of a set
