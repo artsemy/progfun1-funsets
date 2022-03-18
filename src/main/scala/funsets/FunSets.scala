@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 /**
  * 2. Purely Functional Sets.
  */
-trait FunSets extends FunSetsInterface:
+trait FunSets extends FunSetsInterface :
   /**
    * We represent a set by its characteristic function, i.e.
    * its `contains` predicate.
@@ -58,12 +58,8 @@ trait FunSets extends FunSetsInterface:
   def forall(s: FunSet, p: Int => Boolean): Boolean =
     @tailrec
     def iter(a: Int): Boolean =
-      if (a > bound) then
-        true
-      else if (s(a) && s(a) != p(a)) then
-        false
-      else
-        iter(a + 1)
+      a > bound || (!s(a) || s(a) == p(a)) && iter(a + 1)
+
     iter(-bound)
 
   /**
@@ -78,13 +74,14 @@ trait FunSets extends FunSetsInterface:
   def map(s: FunSet, f: Int => Int): FunSet =
     @tailrec
     def iter(a: Int, resSet: FunSet): FunSet =
-      if (a > bound) then
+      if a > bound then
         resSet
-      else if (s(a)) then
+      else if s(a) then
         iter(a + 1, union(resSet, singletonSet(f(a))))
       else
         iter(a + 1, resSet)
-    val empty = singletonSet(f(-bound-1))
+
+    val empty = singletonSet(f(-bound - 1))
     val r1 = iter(-bound, empty)
     diff(r1, empty)
 
