@@ -58,7 +58,7 @@ trait FunSets extends FunSetsInterface :
   def forall(s: FunSet, p: Int => Boolean): Boolean =
     @tailrec
     def iter(a: Int): Boolean =
-      a > bound || (!s(a) || s(a) == p(a)) && iter(a + 1)
+      a > bound || (!s(a) || p(a)) && iter(a + 1)
 
     iter(-bound)
 
@@ -71,19 +71,7 @@ trait FunSets extends FunSetsInterface :
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
    */
-  def map(s: FunSet, f: Int => Int): FunSet =
-    @tailrec
-    def iter(a: Int, resSet: FunSet): FunSet =
-      if a > bound then
-        resSet
-      else if s(a) then
-        iter(a + 1, union(resSet, singletonSet(f(a))))
-      else
-        iter(a + 1, resSet)
-
-    val empty = singletonSet(f(-bound - 1))
-    val r1 = iter(-bound, empty)
-    diff(r1, empty)
+  def map(s: FunSet, f: Int => Int): FunSet = y => exists(s, x => f(x) == y)
 
   /**
    * Displays the contents of a set
